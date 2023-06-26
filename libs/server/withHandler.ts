@@ -4,20 +4,20 @@ export interface ResponseType {
   ok: boolean;
   [key: string]: any;
 }
-
+type method = "GET" | "POST" | "DELETE";
 interface CongifType {
-  method: "GET" | "POST" | "DELETE";
+  methods: method[];
   handler: (req: NextApiRequest, res: NextApiResponse) => void;
   isPrivate?: boolean;
 }
 
 export default function withHandler({
-  method,
+  methods,
   handler,
   isPrivate = true,
 }: CongifType) {
   return async function (req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== method) {
+    if (req.method && !methods.includes(req.method as any)) {
       res.status(405).end();
       return;
     }

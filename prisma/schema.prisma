@@ -12,14 +12,19 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  phone     String?  @unique
-  email     String?  @unique
+  id        Int         @id @default(autoincrement())
+  phone     String?     @unique
+  email     String?     @unique
   name      String
   avatar    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   token     Token[]
+  Product   Product[]
+  Fav       Fav[]
+  posts     Post[]
+  answers   Answer[]
+  Wondering Wondering[]
 }
 
 model Token {
@@ -29,4 +34,61 @@ model Token {
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  imgUrl      String
+  name        String
+  price       Int
+  description String   @db.MediumText
+  favs        Fav[]
+}
+
+model Fav {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+}
+
+model Post {
+  id        Int         @id @default(autoincrement())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  question  String      @db.MediumText
+  longitude Float?
+  latitude  Float?
+  Answer    Answer[]
+  Wondering Wondering[]
+}
+
+model Answer {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+  answer    String   @db.MediumText
+}
+
+model Wondering {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
 }
