@@ -7,6 +7,7 @@ import { Product, User } from "@prisma/client";
 import useMutation from "@libs/client/useMutatuin";
 import { cls } from "@libs/client/utils";
 import useUser from "@libs/client/useUser";
+import Image from "next/image";
 
 interface ProductWithUser extends Product {
   user: User;
@@ -34,18 +35,31 @@ const ItemDetail: NextPage = () => {
     toggleFav({});
   };
   return (
-    <Layout canGoBack>
+    <Layout canGoBack title="상품 상세보기">
       <div className="px-4 py-10">
         <div className="mb-8">
-          <div className="h-96 bg-slate-300" />
+          <div className="relative pb-80">
+            <Image
+              fill
+              src={`https://imagedelivery.net/e47gKtH1bqlCtb8hOWHyxQ/${data?.product.imgUrl}/public`}
+              className="bg-slate-300 object-cover"
+              alt=""
+            />
+          </div>
           <div className="flex cursor-pointer py-3 border-t border-b items-center space-x-3">
-            <div className="w-12 h-12 rounded-full bg-slate-300" />
+            <Image
+              src={`https://imagedelivery.net/e47gKtH1bqlCtb8hOWHyxQ/${data?.product?.user?.avatar}/avatar`}
+              width={48}
+              height={48}
+              className="w-12 h-12 rounded-full bg-slate-300"
+              alt="프로필 사진"
+            />
             <div>
               <p className="text-sm font-medium text-gray-700">
                 {data?.product?.user?.name}
               </p>
               <p className="text-xs font-medium text-gray-500">
-                <Link href={`users/profiles/${data?.product?.user?.id}`}>
+                <Link href={`/users/profiles/${data?.product?.user?.id}`}>
                   View profile &rarr;
                 </Link>
               </p>
