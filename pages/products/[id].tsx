@@ -38,12 +38,12 @@ const ItemDetail: NextPage = () => {
     <Layout canGoBack title="상품 상세보기">
       <div className="px-4 py-10">
         <div className="mb-8">
-          <div className="relative pb-80">
+          <div className="relative pb-80 -z-10">
             <Image
               fill
               src={`https://imagedelivery.net/e47gKtH1bqlCtb8hOWHyxQ/${data?.product.imgUrl}/public`}
               className="bg-slate-300 object-cover"
-              alt=""
+              alt="상품 이미지"
             />
           </div>
           <div className="flex cursor-pointer py-3 border-t border-b items-center space-x-3">

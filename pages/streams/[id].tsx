@@ -66,9 +66,16 @@ const StreamDetail: NextPage = () => {
   };
 
   return (
-    <Layout canGoBack>
+    <Layout canGoBack title="라이브">
       <div className="py-10 px-4 space-y-4">
-        <div className="w-full rounded-md shadow-sm bg-slate-300 aspect-video" />
+        {data?.stream.cloudflareId ? (
+          <iframe
+            className="w-full rounded-md shadow-sm aspect-video"
+            src={`https://iframe.videodelivery.net/${data?.stream?.cloudflareId}`}
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+            allowFullScreen={true}
+          ></iframe>
+        ) : null}
         <h1 className=" text-gray-800 font-semibold  text-2xl mt-2">
           {data?.stream?.name}
         </h1>
@@ -76,6 +83,11 @@ const StreamDetail: NextPage = () => {
           ₩ {data?.stream?.price}
         </span>
         <p className="my-6 text-gray-700">{data?.stream?.description}</p>
+        <div className="bg-orange-300 p-5 rounded-md overflow-scroll flex flex-col space-y-3">
+          <span>비밀</span>
+          <span>URL : {data?.stream.cloudflareUrl}</span>
+          <span>Key : {data?.stream.cloudflareKey}</span>
+        </div>
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Live Chat</h2>
           <div className="py-10 pb-16 h-[50vh] overflow-y-scroll  px-4 space-y-4">
