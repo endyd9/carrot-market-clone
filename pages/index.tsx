@@ -6,6 +6,7 @@ import useUser from "@libs/client/useUser";
 import Head from "next/head";
 import useSWR from "swr";
 import { Fav, Product } from "@prisma/client";
+import { useEffect } from "react";
 
 export interface ProductWithCount extends Product {
   _count: {
@@ -20,7 +21,6 @@ interface ProductResponse {
 const Home: NextPage = () => {
   const { user, isLoading } = useUser();
   const { data } = useSWR<ProductResponse>("/api/products");
-  console.log(data?.products[3].imgUrl);
   return (
     <Layout title="홈" hasTabBar>
       <Head>
