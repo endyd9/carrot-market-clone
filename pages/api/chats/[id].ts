@@ -11,7 +11,6 @@ async function handler(
     const {
       query: { id },
     } = req;
-
     const chat = await client.chatRoom.findUnique({
       where: {
         id: +id!.toString(),
@@ -22,7 +21,11 @@ async function handler(
             name: true,
           },
         },
-        messages: true,
+        messages: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
     res.json({

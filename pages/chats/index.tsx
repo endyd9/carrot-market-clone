@@ -2,16 +2,12 @@ import type { NextPage } from "next";
 import Layout from "@components/layout";
 import Link from "next/link";
 import useSWR from "swr";
-import { ChatRoom, Message } from "@prisma/client";
+import { ChatRoom, Message, User } from "@prisma/client";
 import useUser from "@libs/client/useUser";
 
 interface ChatRoomResponseWhitNamesAndMessage extends ChatRoom {
-  seller: {
-    name: string;
-  };
-  buyer: {
-    name: string;
-  };
+  seller: User;
+  buyer: User;
   messages: [
     {
       message: string;
@@ -36,7 +32,14 @@ const Chats: NextPage = () => {
             key={chatRoom?.id}
             className="flex px-4 cursor-pointer py-3 items-center space-x-3"
           >
-            <div className="w-12 h-12 rounded-full bg-slate-300" />
+            <img
+              src={`https://imagedelivery.net/e47gKtH1bqlCtb8hOWHyxQ/${
+                chatRoom.seller.name === user?.name
+                  ? chatRoom.buyer.avatar
+                  : chatRoom.seller.avatar
+              }/avatar`}
+              className="w-12 h-12 rounded-full bg-slate-300"
+            />
             <div>
               <p className="text-gray-700">
                 {chatRoom.seller.name === user?.name

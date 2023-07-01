@@ -18,7 +18,8 @@ export default function Message({
         reversed ? "flex-row-reverse space-x-reverse" : "space-x-2"
       )}
     >
-      <div
+      <img
+        src={avatarUrl}
         className={cls(
           "w-8 h-8 rounded-full bg-slate-400",
           reversed ? "ml-2" : ""

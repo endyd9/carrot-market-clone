@@ -3,19 +3,22 @@ import Layout from "@components/layout";
 import Message from "@components/message";
 import useSWR from "swr";
 import { useRouter } from "next/router";
-import { ChatRoom, Message as Messages, Product } from "@prisma/client";
+import { ChatRoom, Message as Messages, Product, User } from "@prisma/client";
 import useUser from "@libs/client/useUser";
 import useMutation from "@libs/client/useMutatuin";
 import { useForm } from "react-hook-form";
 import { MessageForm } from "pages/streams/[id]";
 
-interface ChatRoomWithProductAndUser extends ChatRoom {
+interface MessageWithUser extends Messages {
+  user: User;
+}
+interface ChatRoomWithProductAndMessage extends ChatRoom {
   product: Product;
-  messages: Messages[];
+  messages: MessageWithUser[];
 }
 interface ChatRoomResponse {
   ok: boolean;
-  chat: ChatRoomWithProductAndUser;
+  chat: ChatRoomWithProductAndMessage;
 }
 
 const ChatDetail: NextPage = () => {
@@ -60,6 +63,7 @@ const ChatDetail: NextPage = () => {
             key={message.id}
             message={message.message}
             reversed={message.userId === user?.id}
+            avatarUrl={`https://imagedelivery.net/e47gKtH1bqlCtb8hOWHyxQ/${message?.user?.avatar}/avatar`}
           />
         ))}
         <form
