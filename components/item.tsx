@@ -24,7 +24,7 @@ export default function Item({
       className="flex px-4 pt-5 cursor-pointer justify-between"
     >
       <div className="flex space-x-4">
-        <div className="w-20 h-20 relative overflow-hidden bg-gray-400 rounded-md">
+        <div className="w-20 h-20 relative overflow-hidden bg-gray-400 rounded-md -z-10">
           <Image
             fill
             src={`https://imagedelivery.net/e47gKtH1bqlCtb8hOWHyxQ/${imgUrl}/public`}
