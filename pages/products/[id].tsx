@@ -3,11 +3,12 @@ import Layout from "@components/layout";
 import { useRouter } from "next/router";
 import useSWR, { useSWRConfig } from "swr";
 import Link from "next/link";
-import { Product, User } from "@prisma/client";
+import { ChatRoom, Product, User } from "@prisma/client";
 import useMutation from "@libs/client/useMutatuin";
 import { cls } from "@libs/client/utils";
 import useUser from "@libs/client/useUser";
 import Image from "next/image";
+import { useEffect } from "react";
 
 interface ProductWithUser extends Product {
   user: User;
@@ -16,8 +17,14 @@ interface ProductWithUser extends Product {
 interface ItemDetailResponse {
   ok: boolean;
   product: ProductWithUser;
-  relatedProducts: Product[];
+  relatedProduct: Product[];
   isLiked: boolean;
+}
+
+interface CreateChatRoomResponse {
+  ok: boolean;
+  chatRoom?: ChatRoom;
+  allReadyExist?: ChatRoom;
 }
 
 const ItemDetail: NextPage = () => {
@@ -27,13 +34,38 @@ const ItemDetail: NextPage = () => {
   const { data, mutate: boundMutate } = useSWR<ItemDetailResponse>(
     router.query.id ? `/api/products/${router.query.id}` : null
   );
+
   const [toggleFav] = useMutation(`/api/products/${router.query.id}/fav`);
+
   const onFavClick = () => {
+    if (data && data?.product.userId === user?.id) {
+      return alert("자기건 좋아요 못 누름ㅅㄱ");
+    }
     if (!data) return;
     boundMutate((priv: any) => ({ ...priv, isLiked: !priv.isLiked }), false);
     // mutate("/api/users/me", (prev: any) => ({ ok: !prev.ok }), false);
     toggleFav({});
   };
+
+  const [createChatRoom, { loading, data: chatRoomData }] =
+    useMutation<CreateChatRoomResponse>(`/api/chats`);
+
+  const onChatClick = () => {
+    const chatData = {
+      product: data?.product.id,
+      seller: data?.product.user.id,
+      buyer: user?.id,
+    };
+    createChatRoom(chatData);
+  };
+  useEffect(() => {
+    if (chatRoomData && chatRoomData.chatRoom) {
+      router.push(`/chats/${chatRoomData.chatRoom.id}`);
+    } else if (chatRoomData && chatRoomData.allReadyExist) {
+      router.push(`/chats/${chatRoomData.allReadyExist.id}`);
+    }
+  }, [chatRoomData, router]);
+
   return (
     <Layout canGoBack title="상품 상세보기">
       <div className="px-4 py-10">
@@ -60,7 +92,7 @@ const ItemDetail: NextPage = () => {
               </p>
               <p className="text-xs font-medium text-gray-500">
                 <Link href={`/users/profiles/${data?.product?.user?.id}`}>
-                  View profile &rarr;
+                  프로필 보기 &rarr;
                 </Link>
               </p>
             </div>
@@ -76,9 +108,18 @@ const ItemDetail: NextPage = () => {
               {data?.product?.description}
             </p>
             <div className="flex items-center justify-between space-x-2">
-              <button className="flex-1 bg-orange-500 text-white py-3 rounded-md focus:outline-none focus:ring-offset-2 font-medium hover:bg-orange-600 focus:ring-orange-500">
-                Talk to seller
-              </button>
+              {data?.product.userId === user?.id ? (
+                <button className="flex-1 bg-orange-500 text-white py-3 rounded-md focus:outline-none focus:ring-offset-2 font-medium hover:bg-orange-600 focus:ring-orange-500">
+                  상품정보 수정하기
+                </button>
+              ) : (
+                <button
+                  onClick={onChatClick}
+                  className="flex-1 bg-orange-500 text-white py-3 rounded-md focus:outline-none focus:ring-offset-2 font-medium hover:bg-orange-600 focus:ring-orange-500"
+                >
+                  판매자와 채팅하기
+                </button>
+              )}
               <button
                 onClick={onFavClick}
                 className={cls(
@@ -119,12 +160,15 @@ const ItemDetail: NextPage = () => {
           </div>
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Similar items</h2>
+          <h2 className="text-2xl font-bold text-gray-900">비슷한 상품</h2>
           <div className="mt-6 grid grid-cols-2 gap-4">
-            {data?.relatedProducts?.map((product: Product) => (
+            {data?.relatedProduct?.map((product: Product) => (
               <Link href={`${product.id}`} key={product.id}>
                 <div>
-                  <div className="h-56 w-full mb-4 bg-slate-300 " />
+                  <img
+                    src={`https://imagedelivery.net/e47gKtH1bqlCtb8hOWHyxQ/${product?.imgUrl}/public`}
+                    className="h-56 w-full mb-4 bg-slate-300 "
+                  />
                   <h3 className="text-sm text-gray-700 -mb-1">
                     {product.name}
                   </h3>
