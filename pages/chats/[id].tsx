@@ -56,7 +56,7 @@ const ChatDetail: NextPage = () => {
     sendMessage(form);
   };
   return (
-    <Layout canGoBack title={`${data?.chat.product.name}`}>
+    <Layout canGoBack title={`${data?.chat.product.name}`} seoTitle="채팅">
       <div className="py-12 px-4 space-y-5">
         {data?.chat?.messages.map((message) => (
           <Message

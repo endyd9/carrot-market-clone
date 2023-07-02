@@ -12,6 +12,7 @@ async function handler(
       include: {
         _count: {
           select: {
+            Chat: true,
             favs: true,
           },
         },

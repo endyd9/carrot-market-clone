@@ -24,7 +24,7 @@ const Chats: NextPage = () => {
   const { user } = useUser();
   const { data } = useSWR<ChatRoomResponse>(`/api/chats`);
   return (
-    <Layout title="채팅" hasTabBar>
+    <Layout title="채팅" seoTitle="채팅" hasTabBar>
       <div className="py-8 divide-y-[1px] ">
         {data?.chatRooms?.map((chatRoom) => (
           <Link

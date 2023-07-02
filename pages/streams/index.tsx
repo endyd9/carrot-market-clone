@@ -14,7 +14,7 @@ interface StreamsResponse {
 const Stream: NextPage = () => {
   const { data } = useSWR<StreamsResponse>(`/api/streams?page=1`);
   return (
-    <Layout title="라이브" hasTabBar>
+    <Layout title="라이브" seoTitle="라이브" hasTabBar>
       <div className="py-8 block  px-4">
         {data?.streams.map((stream) => (
           <Link

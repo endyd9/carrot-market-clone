@@ -5,6 +5,7 @@ const client = new PrismaClient();
 async function main() {
   [...Array.from(Array(500).keys())].forEach(async (item) => {
     await client.stream.create({
+      //@ts-ignore
       data: {
         name: String(item),
         description: String(item),

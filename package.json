@@ -11,13 +11,17 @@
     "@prisma/client": "^4.16.1",
     "@tailwindcss/forms": "^0.5.3",
     "emailjs-com": "^3.2.0",
+    "gray-matter": "^4.0.3",
     "iron-session": "^6.3.1",
     "next": "13.4.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.44.2",
+    "remark-html": "^15.0.2",
+    "remark-parse": "^10.0.2",
     "swr": "^2.1.5",
-    "twilio": "^4.11.1"
+    "twilio": "^4.11.1",
+    "unified": "^10.1.2"
   },
   "devDependencies": {
     "@types/node": "20.2.3",
