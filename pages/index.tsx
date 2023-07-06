@@ -77,7 +77,6 @@ const Page: NextPage<{ products: ProductWithCount }> = ({ products }) => {
 
 export async function getServerSideProps() {
   console.log("SSR");
-
   const products = await client.product.findMany({});
   return {
     props: {

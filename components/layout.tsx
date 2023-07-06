@@ -26,7 +26,7 @@ export default function Layout({
   return (
     <div>
       <Head>
-        <title> {seoTitle} | 캐럿 마켓</title>
+        <title>캐럿 마켓 | {seoTitle}</title>
       </Head>
       <div
         className={cls(

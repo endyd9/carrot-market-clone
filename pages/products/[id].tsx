@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Layout from "@components/layout";
 import { useRouter } from "next/router";
 import useSWR, { useSWRConfig } from "swr";
@@ -9,6 +9,7 @@ import { cls } from "@libs/client/utils";
 import useUser from "@libs/client/useUser";
 import Image from "next/image";
 import { useEffect } from "react";
+import client from "@libs/server/client";
 
 interface ProductWithUser extends Product {
   user: User;
@@ -27,7 +28,11 @@ interface CreateChatRoomResponse {
   allReadyExist?: ChatRoom;
 }
 
-const ItemDetail: NextPage = () => {
+const ItemDetail: NextPage<ItemDetailResponse> = ({
+  product,
+  relatedProduct,
+  isLiked,
+}) => {
   const { user, isLoading } = useUser();
   const router = useRouter();
   const { mutate } = useSWRConfig();
@@ -67,20 +72,20 @@ const ItemDetail: NextPage = () => {
   }, [chatRoomData, router]);
 
   return (
-    <Layout canGoBack title="상품 상세보기" seoTitle={data?.product?.name}>
+    <Layout canGoBack title="상품 상세보기" seoTitle={product?.name}>
       <div className="px-4 py-10">
         <div className="mb-8">
           <div className="relative pb-80 -z-10">
             <Image
               fill
-              src={`https://imagedelivery.net/e47gKtH1bqlCtb8hOWHyxQ/${data?.product.imgUrl}/public`}
+              src={`https://imagedelivery.net/e47gKtH1bqlCtb8hOWHyxQ/${product.imgUrl}/public`}
               className="bg-slate-300 object-cover"
               alt="상품 이미지"
             />
           </div>
           <div className="flex cursor-pointer py-3 border-t border-b items-center space-x-3">
             <Image
-              src={`https://imagedelivery.net/e47gKtH1bqlCtb8hOWHyxQ/${data?.product?.user?.avatar}/avatar`}
+              src={`https://imagedelivery.net/e47gKtH1bqlCtb8hOWHyxQ/${product?.user?.avatar}/avatar`}
               width={48}
               height={48}
               className="w-12 h-12 rounded-full bg-slate-300"
@@ -88,10 +93,10 @@ const ItemDetail: NextPage = () => {
             />
             <div>
               <p className="text-sm font-medium text-gray-700">
-                {data?.product?.user?.name}
+                {product?.user?.name}
               </p>
               <p className="text-xs font-medium text-gray-500">
-                <Link href={`/users/profiles/${data?.product?.user?.id}`}>
+                <Link href={`/users/profiles/${product?.user?.id}`}>
                   프로필 보기 &rarr;
                 </Link>
               </p>
@@ -99,16 +104,16 @@ const ItemDetail: NextPage = () => {
           </div>
           <div className="mt-5">
             <h1 className="text-3xl font-bold text-gray-900">
-              {data?.product?.name}
+              {product?.name}
             </h1>
             <p className="block text-3xl mt-3 text-gray-900">
-              ₩{data?.product?.price}
+              ₩{product?.price}
             </p>
             <p className="text-base my-6 text-gray-700">
-              {data?.product?.description}
+              {product?.description}
             </p>
             <div className="flex items-center justify-between space-x-2">
-              {data?.product.userId === user?.id ? (
+              {product.userId === user?.id ? (
                 <button className="flex-1 bg-orange-500 text-white py-3 rounded-md focus:outline-none focus:ring-offset-2 font-medium hover:bg-orange-600 focus:ring-orange-500">
                   상품정보 수정하기
                 </button>
@@ -124,12 +129,12 @@ const ItemDetail: NextPage = () => {
                 onClick={onFavClick}
                 className={cls(
                   "p-3 rounded-full focus:outline-none flex items-center justify-center hover:bg-gray-100",
-                  data?.isLiked
+                  isLiked
                     ? "text-red-500 hover:text-red-600"
                     : "text-gray-400  hover:text-gray-500"
                 )}
               >
-                {data?.isLiked ? (
+                {isLiked ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -162,7 +167,7 @@ const ItemDetail: NextPage = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-900">비슷한 상품</h2>
           <div className="mt-6 grid grid-cols-2 gap-4">
-            {data?.relatedProduct?.map((product: Product) => (
+            {relatedProduct?.map((product: Product) => (
               <Link href={`${product.id}`} key={product.id}>
                 <div>
                   <img
@@ -183,6 +188,60 @@ const ItemDetail: NextPage = () => {
       </div>
     </Layout>
   );
+};
+
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+};
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  console.log("정적페이지 생성 딱 대");
+  if (!ctx?.params?.id) {
+    return {
+      props: {},
+    };
+  }
+  const product = await client.product.findUnique({
+    where: {
+      id: +ctx.params.id.toString(),
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          avatar: true,
+        },
+      },
+    },
+  });
+  const terms = product?.name.split(" ").map((word) => ({
+    name: {
+      contains: word,
+    },
+  }));
+  const relatedProduct = await client.product.findMany({
+    take: 10,
+    where: {
+      OR: terms,
+      AND: {
+        id: {
+          not: product?.id,
+        },
+      },
+    },
+  });
+  const isLiked = false;
+  return {
+    props: {
+      product: JSON.parse(JSON.stringify(product)),
+      relatedProduct: JSON.parse(JSON.stringify(relatedProduct)),
+      isLiked,
+    },
+  };
 };
 
 export default ItemDetail;
