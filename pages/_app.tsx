@@ -3,6 +3,7 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { SWRConfig } from "swr";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/react";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -14,6 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     >
       <div className="w-full max-w-xl mx-auto">
         <Component {...pageProps} />
+        <Analytics />
       </div>
       <Script
         src="https://developers.kakao.com/sdk/js/kakao.js"
