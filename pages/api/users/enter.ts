@@ -34,34 +34,34 @@ async function handler(
   });
 
   if (phone) {
-    // const message = await twilioClient.messages.create({
-    //   messagingServiceSid: process.env.MESSAGING_SID,
-    //   to: process.env.PHONE_NUMBER!,
-    //   from: process.env.TWILIO_NUMBER,
-    //   body: `your login token is ${payload}`,
-    // });
+    const message = await twilioClient.messages.create({
+      messagingServiceSid: process.env.MESSAGING_SID,
+      to: process.env.PHONE_NUMBER!,
+      from: process.env.TWILIO_NUMBER,
+      body: `your login token is ${payload}`,
+    });
     console.log(payload);
   }
   if (email) {
-    // const templateParams = {
-    //   to_name: "뚜용스",
-    //   message: payload,
-    // };
-    // await emailjs
-    //   .send(
-    //     process.env.EMAILJS_SERVICE_KYE!,
-    //     process.env.EMAILJS_TAMPLATE!,
-    //     templateParams,
-    //     process.env.EMAILJS_ID
-    //   )
-    //   .then(
-    //     function (response) {
-    //       console.log("SUCCESS!", response.status, response.text);
-    //     },
-    //     function (error) {
-    //       console.log("FAILED...", error);
-    //     }
-    //   );
+    const templateParams = {
+      to_name: "뚜용스",
+      message: payload,
+    };
+    await emailjs
+      .send(
+        process.env.EMAILJS_SERVICE_KYE!,
+        process.env.EMAILJS_TAMPLATE!,
+        templateParams,
+        process.env.EMAILJS_ID
+      )
+      .then(
+        function (response) {
+          console.log("SUCCESS!", response.status, response.text);
+        },
+        function (error) {
+          console.log("FAILED...", error);
+        }
+      );
     console.log(payload);
   }
 
