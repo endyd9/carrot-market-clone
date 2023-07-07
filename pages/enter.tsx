@@ -53,7 +53,7 @@ const Enter: NextPage = () => {
   }, [tokenData]);
   return (
     <div className="mt-16 px-4">
-      <h3 className="text-3xl font-bold text-center">Enter to Carrot</h3>
+      <h3 className="text-3xl font-bold text-center">캐럿마켓임둥</h3>
       <div className="mt-12">
         {data?.ok ? (
           <>
@@ -76,9 +76,7 @@ const Enter: NextPage = () => {
         ) : (
           <>
             <div className="flex flex-col items-center">
-              <h5 className="text-sm text-gray-500 font-medium">
-                Enter using:
-              </h5>
+              <h5 className="text-sm text-gray-500 font-medium">로그인</h5>
               <div className="grid  border-b  w-full mt-8 grid-cols-2 ">
                 <button
                   className={cls(
@@ -89,7 +87,7 @@ const Enter: NextPage = () => {
                   )}
                   onClick={onEmailClick}
                 >
-                  Email
+                  이메일
                 </button>
                 <button
                   className={cls(
@@ -100,7 +98,7 @@ const Enter: NextPage = () => {
                   )}
                   onClick={onPhoneClick}
                 >
-                  Phone
+                  전화번호
                 </button>
               </div>
             </div>
@@ -130,12 +128,10 @@ const Enter: NextPage = () => {
                 </>
               ) : null}
               {method === "email" ? (
-                <Button text={submitting ? "Loading..." : "Get login link"} />
+                <Button text={submitting ? "Loading..." : "로그인"} />
               ) : null}
               {method === "phone" ? (
-                <Button
-                  text={submitting ? "Loading..." : "Get one-time password"}
-                />
+                <Button text={submitting ? "Loading..." : "로그인"} />
               ) : null}
             </form>
           </>
@@ -146,7 +142,7 @@ const Enter: NextPage = () => {
             <div className="absolute w-full border-t border-gray-300" />
             <div className="relative -top-3 text-center ">
               <span className="bg-white px-2 text-sm text-gray-500">
-                Or enter with
+                계정 연결
               </span>
             </div>
           </div>
