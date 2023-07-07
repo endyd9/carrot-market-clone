@@ -27,7 +27,7 @@ const ChatDetail: NextPage = () => {
   const { data, mutate } = useSWR<ChatRoomResponse>(
     router.query.id ? `/api/chats/${router.query.id}` : null,
     {
-      refreshInterval: 1000,
+      refreshInterval: 100,
     }
   );
 
