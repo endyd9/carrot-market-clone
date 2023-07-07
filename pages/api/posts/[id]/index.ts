@@ -55,6 +55,9 @@ async function handler(
       },
     })
   );
+
+  await res.revalidate(`/community/:id`);
+
   res.json({
     ok: true,
     post,

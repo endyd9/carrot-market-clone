@@ -108,8 +108,6 @@ const Community: NextPage<PostsResponse> = ({ posts }) => {
 };
 
 export async function getStaticProps() {
-  console.log("정적페이지 생성");
-
   const posts = await client.post.findMany({
     include: { user: true },
     orderBy: { createdAt: "desc" },

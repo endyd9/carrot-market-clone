@@ -198,7 +198,6 @@ export const getStaticPaths: GetStaticPaths = () => {
 };
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-  console.log("정적페이지 생성 딱 대");
   if (!ctx?.params?.id) {
     return {
       props: {},
