@@ -32,9 +32,11 @@ const Enter: NextPage = () => {
   const onEmailClick = () => {
     reset(), setMethod("email");
   };
+
   const onPhoneClick = () => {
     reset(), setMethod("phone");
   };
+
   const onValid = (validForm: EnterForm) => {
     enter(validForm);
   };
