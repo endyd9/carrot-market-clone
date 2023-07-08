@@ -26,7 +26,6 @@ const Create: NextPage = () => {
   const { register, handleSubmit } = useForm<CreateForm>();
   const onValid = (form: CreateForm) => {
     if (loading) return;
-    return console.log(form);
     createStream(form);
   };
   useEffect(() => {
