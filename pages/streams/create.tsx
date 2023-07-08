@@ -25,8 +25,10 @@ const Create: NextPage = () => {
     useMutation<CreateResponse>(`/api/streams`);
   const { register, handleSubmit } = useForm<CreateForm>();
   const onValid = (form: CreateForm) => {
+    console.log(form);
+
     if (loading) return;
-    createStream(form);
+    return createStream(form);
   };
   useEffect(() => {
     if (data && data.ok) {
